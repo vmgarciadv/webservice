@@ -1,10 +1,53 @@
-from rest_framework import viewsets
+from rest_framework import status, viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .serializers import FacultySerializer, SchoolSerializer, SectionSerializer, PersonSerializer
 from .models import Faculty, School, Section, Person
+from django.utils.timezone import now
 
-class FacultyViewSet(viewsets.ModelViewSet):
-    queryset = Faculty.objects.all().order_by('id')
-    serializer_class = FacultySerializer
+@api_view(['GET', 'POST'])
+def faculty_list(request):
+    """
+    Lista todas las facultades o crea una nueva facultad
+    """
+    if request.method == 'GET':
+        faculties = Faculty.objects.filter(status='enabled')
+        serializer = FacultySerializer(faculties, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = FacultySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def faculty_detail(request, id):
+    """
+    Listar, modificar o eliminar una facultad por ID
+    """
+    try:
+        faculty = Faculty.objects.get(id=id, status='enabled')
+    except Faculty.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = FacultySerializer(faculty)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = FacultySerializer(faculty, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        faculty.status = 'disabled'
+        faculty.deleted_date = now()
+        faculty.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class SchoolViewSet(viewsets.ModelViewSet):
     queryset = School.objects.all()

@@ -104,7 +104,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # REST Framework
 
 REST_FRAMEWORK = {
-
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S%z"
 }
 
 # Internationalization
@@ -112,7 +112,7 @@ REST_FRAMEWORK = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Caracas'
 
 USE_I18N = True
 
