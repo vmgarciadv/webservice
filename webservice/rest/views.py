@@ -137,6 +137,46 @@ def section_detail(request, id):
         section.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class PersonViewSet(viewsets.ModelViewSet):
-    queryset = Person.objects.all()
-    serializer_class = PersonSerializer
+@api_view(['GET', 'POST'])
+def person_list(request):
+    """
+    Lista todas las secciones o crea una nueva seccion para una escuela
+    """
+    if request.method == 'GET':
+        people = Person.objects.filter(status='enabled')
+        serializer = PersonSerializer(people, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = PersonSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def person_detail(request, id):
+    """
+    Listar, modificar o eliminar una seccion por ID
+    """
+    try:
+        person = Person.objects.get(id=id, status='enabled')
+    except Person.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = PersonSerializer(person)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = PersonSerializer(person, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        person.status = 'disabled'
+        person.deleted_date = now()
+        person.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)

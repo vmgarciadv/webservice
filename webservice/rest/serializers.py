@@ -64,7 +64,21 @@ class SectionSerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class PersonSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Person
-        fields = ('id', 'DNI', 'first_name', 'last_name', 'status', 'created_date', 'deleted_date')
+class PersonSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=False)
+    dni = serializers.CharField(max_length=8, required=False) 
+    first_name = serializers.CharField(max_length=20, required=False)
+    last_name = serializers.CharField(max_length=30, required=False)
+    status = serializers.CharField(default='enabled', max_length=10, required=False)
+    created_date = serializers.DateTimeField(default=now, required=False)
+    deleted_date = serializers.DateTimeField(required=False)
+
+    def create(self, validated_data):
+        return Person.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.dni = validated_data.get('dni', instance.dni)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()
+        return instance

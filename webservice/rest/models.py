@@ -43,8 +43,8 @@ class Person(models.Model):
     dni = models.CharField(max_length=8)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=30)
-    status = models.CharField(max_length=10)
-    created_date = models.DateTimeField()
+    status = models.CharField(max_length=10, blank=True)
+    created_date = models.DateTimeField(blank=True)
     deleted_date = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):

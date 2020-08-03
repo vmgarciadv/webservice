@@ -3,7 +3,6 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'people', views.PersonViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -13,5 +12,7 @@ urlpatterns = [
     path('schools/<int:id>/', views.school_detail),
     path('sections/', views.section_list),
     path('sections/<int:id>/', views.section_detail),
+    path('people/', views.person_list),
+    path('people/<int:id>/', views.person_detail),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
