@@ -19,10 +19,26 @@ class FacultySerializer(serializers.Serializer):
         instance.save()
         return instance
 
-class SchoolSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = School
-        fields = ('id', 'name', 'description', 'status', 'created_date', 'deleted_date', 'fk_faculty')
+class SchoolSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=False)
+    name = serializers.CharField(max_length=20)
+    description = serializers.CharField(max_length=30, required=False)
+    status = serializers.CharField(default='enabled', max_length=10, required=False)
+    created_date = serializers.DateTimeField(default=now, required=False)
+    deleted_date = serializers.DateTimeField(required=False)
+    fk_faculty_id = serializers.IntegerField()
+
+
+    def create(self, validated_data):
+        return School.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.fk_faculty = validated_data.get('k_faculty', instance.fk_faculty)
+        instance.save()
+        return instance
+
 
 class SectionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

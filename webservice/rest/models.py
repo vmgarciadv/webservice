@@ -13,8 +13,8 @@ class Faculty(models.Model):
 class School(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=30)
-    status = models.CharField(max_length=10)
-    created_date = models.DateTimeField()
+    status = models.CharField(max_length=10, blank=True)
+    created_date = models.DateTimeField(blank=True)
     deleted_date = models.DateTimeField(null=True, blank=True)
     fk_faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE, verbose_name="Faculty")
 
