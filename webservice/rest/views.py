@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .serializers import FacultySerializer
+from .models import Faculty
 
-# Create your views here.
+class FacultyViewSet(viewsets.ModelViewSet):
+    queryset = Faculty.objects.all().order_by('id')
+    serializer_class = FacultySerializer
