@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .serializers import FacultySerializer, SchoolSerializer
-from .models import Faculty, School
+from .serializers import FacultySerializer, SchoolSerializer, SectionSerializer
+from .models import Faculty, School, Section
 
 class FacultyViewSet(viewsets.ModelViewSet):
     queryset = Faculty.objects.all().order_by('id')
@@ -9,3 +9,7 @@ class FacultyViewSet(viewsets.ModelViewSet):
 class SchoolViewSet(viewsets.ModelViewSet):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
+
+class SectionViewSet(viewsets.ModelViewSet):
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
