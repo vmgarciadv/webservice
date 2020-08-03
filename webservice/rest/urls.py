@@ -14,5 +14,7 @@ urlpatterns = [
     path('sections/<int:id>/', views.section_detail),
     path('people/', views.person_list),
     path('people/<int:id>/', views.person_detail),
+    path('enrollments/', views.enrollment_list),
+    path('enrollments/<int:id>/', views.enrollment_detail),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

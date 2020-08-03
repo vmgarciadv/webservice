@@ -1,8 +1,8 @@
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import FacultySerializer, SchoolSerializer, SectionSerializer, PersonSerializer
-from .models import Faculty, School, Section, Person
+from .serializers import FacultySerializer, SchoolSerializer, SectionSerializer, PersonSerializer, EnrollmentSerializer
+from .models import Faculty, School, Section, Person, Enrollment
 from django.utils.timezone import now
 
 @api_view(['GET', 'POST'])
@@ -179,4 +179,48 @@ def person_detail(request, id):
         person.status = 'disabled'
         person.deleted_date = now()
         person.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+def enrollment_list(request):
+    """
+    Lista todas las inscripciones con su profesor y alumno
+    """
+    if request.method == 'GET':
+        enrollments = Enrollment.objects.filter(status='enabled')
+        serializer = EnrollmentSerializer(enrollments, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = EnrollmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def enrollment_detail(request, id):
+    """
+    Listar, modificar o eliminar una inscripcion por ID
+    """
+    try:
+        enrollment = Enrollment.objects.get(id=id, status='enabled')
+    except Person.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = EnrollmentSerializer(enrollment)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = EnrollmentSerializer(enrollment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        enrollment.status = 'disabled'
+        enrollment.deleted_date = now()
+        enrollment.save()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -37,12 +37,21 @@ class Section(models.Model):
 
     def __str__(self):
         return self.name
-
-
 class Person(models.Model):
     dni = models.CharField(max_length=8)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=30)
+    status = models.CharField(max_length=10, blank=True)
+    created_date = models.DateTimeField(blank=True)
+    deleted_date = models.DateTimeField(null=True, blank=True)
+    
+    def __str__(self):
+        return self.name
+
+class Enrollment(models.Model):
+    fk_person = models.ForeignKey(Person, on_delete=models.CASCADE, verbose_name="Person")
+    fk_section = models.ForeignKey(Section, on_delete=models.CASCADE, verbose_name="Section")
+    tipo = models.CharField(max_length=8)
     status = models.CharField(max_length=10, blank=True)
     created_date = models.DateTimeField(blank=True)
     deleted_date = models.DateTimeField(null=True, blank=True)

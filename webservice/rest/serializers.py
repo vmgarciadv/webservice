@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Faculty, School, Section, Person
+from .models import Faculty, School, Section, Person, Enrollment
 from django.utils.timezone import now
 
 class FacultySerializer(serializers.Serializer):
@@ -80,5 +80,24 @@ class PersonSerializer(serializers.Serializer):
         instance.dni = validated_data.get('dni', instance.dni)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.save()
+        return instance
+
+class EnrollmentSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=False)
+    fk_person_id = serializers.IntegerField(required=False)
+    fk_section_id = serializers.IntegerField(required=False)
+    tipo = serializers.CharField(max_length=8, required=False)
+    status = serializers.CharField(default='enabled', max_length=10, required=False)
+    created_date = serializers.DateTimeField(default=now, required=False)
+    deleted_date = serializers.DateTimeField(required=False)
+
+    def create(self, validated_data):
+        return Enrollment.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.fk_person_id = validated_data.get('fk_person_id', instance.fk_person_id)
+        instance.fk_section_id = validated_data.get('fk_section_id', instance.fk_section_id)
+        instance.tipo = validated_data.get('tipo', instance.tipo)
         instance.save()
         return instance
