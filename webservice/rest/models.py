@@ -24,14 +24,14 @@ class School(models.Model):
 class Section(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=30)
-    status = models.CharField(max_length=10)
+    status = models.CharField(max_length=10, blank=True)
     uc = models.IntegerField()
     semester = models.IntegerField()
     tipo = models.CharField(max_length=9)
     ht = models.FloatField(default=0)
     hp =  models.FloatField(default=0, null=True, blank=True)
     hl = models.FloatField(default=0, null=True, blank=True)
-    created_date = models.DateTimeField()
+    created_date = models.DateTimeField(blank=True)
     deleted_date = models.DateTimeField(null=True, blank=True)
     fk_school = models.ForeignKey(School, on_delete=models.CASCADE, verbose_name="School")
 
