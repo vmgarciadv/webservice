@@ -192,8 +192,14 @@ def enrollment_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        Person = None
+        enrollment = Enrollment.objects.filter(status='enabled').values('fk_person_id')
         serializer = EnrollmentSerializer(data=request.data)
-        if serializer.is_valid():
+
+        for e in enrollment:
+            if e['fk_person_id'] == request.data.get('fk_person_id'):
+                Person = True
+        if serializer.is_valid() and Person == None:
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -213,8 +219,15 @@ def enrollment_detail(request, id):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
+        Person = None
+        personas = Enrollment.objects.filter(status='enabled').values('fk_person_id')
         serializer = EnrollmentSerializer(enrollment, data=request.data)
-        if serializer.is_valid():
+
+        for e in personas:
+            if e['fk_person_id'] == request.data.get('fk_person_id'):
+                Person = True
+                
+        if serializer.is_valid() and Person == None:
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
