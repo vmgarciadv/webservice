@@ -137,6 +137,46 @@ def section_detail(request, id):
         section.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET'])
+def section_students(request, id):
+    """
+    Listar los estudiantes de una seccion
+    """
+    try:
+        section = Section.objects.get(id=id, status='enabled') 
+    except Section.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        fk_person = []
+        enrollment = Enrollment.objects.filter(fk_section_id=section.id, status='enabled', tipo='student').values('fk_person_id')
+        for e in enrollment:
+            fk_person.append(e['fk_person_id'])
+        fk_person.append(' ')
+        people = Person.objects.raw(f'SELECT * FROM rest_person WHERE status = "enabled" and id IN {tuple(fk_person)}')
+        serializer = PersonSerializer(people, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def section_teacher(request, id):
+    """
+    Listar los estudiantes de una seccion
+    """
+    try:
+        section = Section.objects.get(id=id, status='enabled') 
+    except Section.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        fk_person = []
+        enrollment = Enrollment.objects.filter(fk_section_id=section.id, status='enabled', tipo='teacher').values('fk_person_id')
+        for e in enrollment:
+            fk_person.append(e['fk_person_id'])
+        fk_person.append(' ')
+        people = Person.objects.raw(f'SELECT * FROM rest_person WHERE status = "enabled" and id IN {tuple(fk_person)}')
+        serializer = PersonSerializer(people, many=True)
+        return Response(serializer.data)
+
 @api_view(['GET', 'POST'])
 def person_list(request):
     """
