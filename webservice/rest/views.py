@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from .serializers import FacultySerializer, SchoolSerializer, SectionSerializer, PersonSerializer, EnrollmentSerializer
 from .models import Faculty, School, Section, Person, Enrollment
 from django.utils.timezone import now
+from rest_framework.decorators import permission_classes
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 @api_view(['GET', 'POST'])
 def faculty_list(request):

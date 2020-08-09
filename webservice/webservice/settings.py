@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest.apps.RestConfig',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -104,7 +105,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # REST Framework
 
 REST_FRAMEWORK = {
-    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S%z"
+    'DATETIME_FORMAT': "%Y-%m-%dT%H:%M:%S%z",
+    'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
+    ]
+}
+
+SWAGGER_SETTINGS = {            
+    'JSON_EDITOR': True,  
 }
 
 # Internationalization
