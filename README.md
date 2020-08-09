@@ -3,26 +3,49 @@
 Amelia Brito, Bryan Rodríguez, Thomas Lodato y Víctor García
 # Instalación
 1. Para clonar el repositorio abra git bash y ejecute el siguiente comando:
-    $ git clone https://github.com/vmgarciadv/webservice.git
+
+    <b>$ git clone https://github.com/vmgarciadv/webservice.git</b>
+    
 2. Muévase a la rama develop para obtener todos los archivos:
-    $ git checkout develop
+
+    <b>$ git checkout develop</b>
+    
 3. Abra un cmd en la carpeta webservice y cree un entorno virtual:
-    $ py -m venv webserviceEnv
+
+    <b>$ py -m venv webserviceEnv</b>
+    
 4. Active el entorno virtual:
-    $ webserviceEnv\Scripts\activate.bat
+
+    <b>$ webserviceEnv\Scripts\activate.bat</b>
+    
 5. Una vez activado, instale Django:
-    $ pip install django -U
+
+    <b>$ pip install django -U</b>
+    
 6. Ahora, instale rest-framework:
-    $ pip install djangorestframework
+
+    <b>$ pip install djangorestframework</b>
+    
 7. Por último, instale el paquete de documentación:
-    $ pip install -U drf-yasg
+
+    <b>$ pip install -U drf-yasg</b>
+    
 # Despliegue
 1. Abra la carpeta "webservice", que es donde se encuentra el archivo manage.py: 
-    $ cd webservice
+
+    <b>$ cd webservice</b>
+    
 2. Ahí dentro, ejecute las migraciones:
-    $ python manage.py makemigrations
-    $ python manage.py migrate
+
+    <b>$ python manage.py makemigrations</b>
+    
+    <b>$ python manage.py migrate</b>
 3. Por último, corra el servidor:
-    $ python manage.py runserver
-Si todo salió bien, abra su navegador y coloque la siguiente url: localhost:8000/swagger/
+
+    <b>$ python manage.py runserver</b>
+    
+Si todo salió bien, abra su navegador y coloque la siguiente url: 
+
+    <b>localhost:8000/swagger/</b>
+
 En dicha url podrá ver la documentación de las APIs en formato Swagger.
