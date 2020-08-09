@@ -46,6 +46,6 @@ Amelia Brito, Bryan Rodríguez, Thomas Lodato y Víctor García
     
 Si todo salió bien, abra su navegador y coloque la siguiente url: 
 
-    <b>localhost:8000/swagger/</b>
+    localhost:8000/swagger/
 
 En dicha url podrá ver la documentación de las APIs en formato Swagger.
