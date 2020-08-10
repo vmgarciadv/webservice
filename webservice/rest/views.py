@@ -6,8 +6,10 @@ from .models import Faculty, School, Section, Person, Enrollment
 from django.utils.timezone import now
 from rest_framework.decorators import permission_classes
 from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 
+
+@swagger_auto_schema(method='get', operation_description='Obtener un listado de todas las facultades')
+@swagger_auto_schema(method='post', request_body=FacultySerializer, operation_description='Para insertar solo necesita los atributos name y description, el resto puede eliminarlos')
 @api_view(['GET', 'POST'])
 def faculty_list(request):
     """
@@ -25,6 +27,9 @@ def faculty_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(method='get', operation_description='Obtener una facultad en específico')
+@swagger_auto_schema(method='put', request_body=FacultySerializer, operation_description='Para modificar solo necesita los atributos id, name y description, el resto puede eliminarlos')
+@swagger_auto_schema(method='delete', operation_description='Eliminar una facultad')
 @api_view(['GET', 'PUT', 'DELETE'])
 def faculty_detail(request, id):
     """
@@ -52,6 +57,8 @@ def faculty_detail(request, id):
         faculty.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@swagger_auto_schema(method='get', operation_description='Obtener un listado de todas las escuelas')
+@swagger_auto_schema(method='post', request_body=SchoolSerializer, operation_description='Para insertar solo necesita los atributos name, description y fk_faculty, el resto puede eliminarlos')
 @api_view(['GET', 'POST'])
 def school_list(request):
     """
@@ -69,6 +76,9 @@ def school_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(method='get', operation_description='Obtener una escuela en específico')
+@swagger_auto_schema(method='put', request_body=SchoolSerializer, operation_description='Para modificar solo necesita los atributos id, name, description y fk_faculty, el resto puede eliminarlos')
+@swagger_auto_schema(method='delete', operation_description='Eliminar una escuela')
 @api_view(['GET', 'PUT', 'DELETE'])
 def school_detail(request, id):
     """
@@ -96,6 +106,8 @@ def school_detail(request, id):
         school.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@swagger_auto_schema(method='get', operation_description='Obtener un listado de todas las secciones')
+@swagger_auto_schema(method='post', request_body=SectionSerializer, operation_description='Para insertar solo necesita los atributos name, description, uc, semestre, tipo, hp, ht, hl y fk_school, el resto puede eliminarlos')
 @api_view(['GET', 'POST'])
 def section_list(request):
     """
@@ -113,6 +125,9 @@ def section_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(method='get', operation_description='Obtener una seccion en específico')
+@swagger_auto_schema(method='put', request_body=SectionSerializer, operation_description='Para modificar solo necesita los atributos id, name, description, uc, semestre, tipo, hp, ht, hl y fk_school, el resto puede eliminarlos')
+@swagger_auto_schema(method='delete', operation_description='Eliminar una seccion')
 @api_view(['GET', 'PUT', 'DELETE'])
 def section_detail(request, id):
     """
@@ -140,6 +155,7 @@ def section_detail(request, id):
         section.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@swagger_auto_schema(method='get', operation_description='Obtener los alumnos de una seccion en específico')
 @api_view(['GET'])
 def section_students(request, id):
     """
@@ -160,10 +176,11 @@ def section_students(request, id):
         serializer = PersonSerializer(people, many=True)
         return Response(serializer.data)
 
+@swagger_auto_schema(method='get', operation_description='Obtener los profesores de una seccion en específico')
 @api_view(['GET'])
 def section_teacher(request, id):
     """
-    Listar los estudiantes de una seccion
+    Listar los profesores de una seccion
     """
     try:
         section = Section.objects.get(id=id, status='enabled') 
@@ -180,10 +197,12 @@ def section_teacher(request, id):
         serializer = PersonSerializer(people, many=True)
         return Response(serializer.data)
 
+@swagger_auto_schema(method='get', operation_description='Obtener un listado de todas las personas')
+@swagger_auto_schema(method='post', request_body=PersonSerializer, operation_description='Para insertar solo necesita los atributos dni, first_name y last_name, el resto puede eliminarlos')
 @api_view(['GET', 'POST'])
 def person_list(request):
     """
-    Lista todas las secciones o crea una nueva seccion para una escuela
+    Lista todas las personas o crea una nueva persona para una escuela
     """
     if request.method == 'GET':
         people = Person.objects.filter(status='enabled')
@@ -197,10 +216,13 @@ def person_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(method='get', operation_description='Obtener una persona en específico')
+@swagger_auto_schema(method='put', request_body=PersonSerializer, operation_description='Para modificar solo necesita los atributos id, dni, first_name y last_name, el resto puede eliminarlos')
+@swagger_auto_schema(method='delete', operation_description='Eliminar una persona')
 @api_view(['GET', 'PUT', 'DELETE'])
 def person_detail(request, id):
     """
-    Listar, modificar o eliminar una seccion por ID
+    Listar, modificar o eliminar una persona por ID
     """
     try:
         person = Person.objects.get(id=id, status='enabled')
@@ -224,6 +246,8 @@ def person_detail(request, id):
         person.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@swagger_auto_schema(method='get', operation_description='Obtener un listado de todas las inscripciones')
+@swagger_auto_schema(method='post', request_body=EnrollmentSerializer, operation_description='Para insertar solo necesita los atributos fk_person, fk_section y tipo, el resto puede eliminarlos')
 @api_view(['GET', 'POST'])
 def enrollment_list(request):
     """
@@ -247,6 +271,9 @@ def enrollment_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@swagger_auto_schema(method='get', operation_description='Obtener una inscripcion en específico')
+@swagger_auto_schema(method='put', request_body=EnrollmentSerializer, operation_description='Para modificar solo necesita los atributos id, fk_person, fk_section y tipo, el resto puede eliminarlos')
+@swagger_auto_schema(method='delete', operation_description='Eliminar una inscripcion')
 @api_view(['GET', 'PUT', 'DELETE'])
 def enrollment_detail(request, id):
     """
