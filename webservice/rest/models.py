@@ -44,12 +44,6 @@ class Person(models.Model):
     status = models.CharField(max_length=10, blank=True)
     created_date = models.DateTimeField(blank=True)
     deleted_date = models.DateTimeField(null=True, blank=True)
-    
-    sections = models.ManyToManyField(
-        Section,
-        through='Enrollment',
-        through_fields=('fk_person', 'fk_section'),
-    )
 
     def __str__(self):
         return self.first_name
@@ -61,11 +55,6 @@ class Enrollment(models.Model):
     status = models.CharField(max_length=10, blank=True)
     created_date = models.DateTimeField(blank=True)
     deleted_date = models.DateTimeField(null=True, blank=True)
-    
-    register = models.ForeignKey(
-        Section,
-        on_delete=models.CASCADE,
-        related_name='enrollment_register',
-    )
+
     def __str__(self):
         return str(self.id)
